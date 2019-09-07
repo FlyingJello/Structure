@@ -1,7 +1,10 @@
 body {
   background: #272d37;
+  font-family: 'Baumans',sans-serif;
+  color: #919bac;
+  text-align: center;
 }
-  
+
 #grid {
   max-width: 800px;
   width: 90%;
@@ -11,24 +14,69 @@ body {
 
 #canvas {
   width: 100%;
-  padding-bottom : 100%;
 }
 
 .colors {
   max-width: 800px;
   width: 90%;
-  padding: 10px;
   margin:0 auto;
 }
 
 .color {
-  float:left;
+  border: 0;
+  padding: 0;
+  float:right;
   position: relative;
-  width: 10%;
+  width: 20%;
   height: 14px;
-  background: #38404e;
 }
 
-.color:nth-of-type(odd) {
-  background-color: #74e448;
+.shapes {
+  max-width: 800px;
+  width: 90%;
+  margin:0 auto;
+}
+
+.shape {
+  float:left;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin-right: 14px;
+  background-color: #38404e;
+}
+
+#RightTriangle{
+  width: 0; 
+  height: 0; 
+  border-right: 7px solid #272d37;
+  border-top: 7px solid #272d37;
+  border-left: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+#Triangle{
+  width: 0; 
+  height: 0; 
+  border-top: 7px solid #272d37;
+  border-left: 14px solid transparent;
+  border-bottom: 7px solid #272d37;
+}
+
+#Circle{
+  height: 14px;
+  width: 14px;
+  border-radius: 7px;
+}
+
+#HalfCircle{
+  height: 14px;
+  width: 7px;
+  border-radius: 0 14px 14px 0;
+}
+
+#QuarterCircle{
+  width: 14px; 
+  height: 14px; 
+  border-radius: 0 14px 0 0;
 }

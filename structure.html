@@ -8,29 +8,32 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <link rel="stylesheet" href="./structure.css">
+  <link href="https://fonts.googleapis.com/css?family=Baumans&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div class="page">
-    <div class="colors">
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-      <div class="color"></div>
-    </div>
-
+    <h1>Structure</h1>
     <div id="grid">
       <canvas height="800" width="800" id="canvas"></canvas>
+    </div>
+    <div class="colors">
+      <button id="primary" class="color jscolor {valueElement:null, value:'ec4074'}"></button>
+      <button id="secondary" class="color jscolor {valueElement:null, value:'38404e'}"></button>
+    </div>
+
+    <div class="shapes">
+      <div class="shape" id="Square"></div>
+      <div class="shape" id="RightTriangle"></div>
+      <div class="shape" id="Triangle"></div>
+      <div class="shape" id="Circle"></div>
+      <div class="shape" id="HalfCircle"></div>
+      <div class="shape" id="QuarterCircle"></div>
     </div>
 
   </div>
 </body>
+<script src="./jscolor.js"></script>
 <script src="./structure.js"></script>
 
 </html>

@@ -5,70 +5,141 @@ class Point {
   }
 }
 
-class Square {
+class Shape {
   constructor(x, y, mainColor, offColor) {
     this.pos = new Point(x, y);
     this.mainColor = mainColor;
     this.offColor = offColor;
+    this.origin = new Point(x * shapeWidth, y * shapeWidth);
+    this.right = new Point(x * shapeWidth + shapeWidth, y * shapeWidth);
+    this.bottom = new Point(x * shapeWidth, y * shapeWidth + shapeWidth);
+    this.center = new Point(x * shapeWidth + (shapeWidth / 2), y * shapeWidth + (shapeWidth / 2));
   }
 
   rotate() {
-    return true;
-  }
-
-  draw(context) {
-    context.fillStyle = this.mainColor;
-    context.fillRect(this.pos.x * shapeWidth, this.pos.y * shapeWidth, shapeWidth, shapeWidth);
-  }
-}
-
-class Circle {
-  constructor(x, y, mainColor, offColor) {
-    this.pos = new Point(x, y);
-    this.mainColor = mainColor;
-    this.offColor = offColor;
-  }
-
-  rotate() {
-    return true;
+    this.origin = rotateClockwise(this.center, this.origin);
+    this.right = rotateClockwise(this.center, this.right);
+    this.bottom = rotateClockwise(this.center, this.bottom);
   }
 
   draw(context) {
     context.fillStyle = this.offColor;
     context.fillRect(this.pos.x * shapeWidth, this.pos.y * shapeWidth, shapeWidth, shapeWidth);
+  }
+}
+
+class Square extends Shape {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+  }
+
+  draw(context) {
+    context.fillStyle = this.mainColor;
+    context.fillRect(this.pos.x * shapeWidth, this.pos.y * shapeWidth, shapeWidth, shapeWidth);
+  }
+}
+
+class Circle extends Shape {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+    this.origin = new Point(x * shapeWidth + (shapeWidth / 2), y * shapeWidth + (shapeWidth / 2));
+    this.startAngle = 0;
+    this.endAngle = 2 * Math.PI;
+    this.radius = shapeWidth / 2;
+  }
+
+  rotate() {
+    super.rotate();
+    this.startAngle += 0.5 * Math.PI;
+    this.endAngle += 0.5 * Math.PI;
+  }
+
+  draw(context) {
+    super.draw(context);
 
     context.fillStyle = this.mainColor;
     context.beginPath();
-    context.arc(this.pos.x * shapeWidth + (shapeWidth / 2), this.pos.y * shapeWidth + (shapeWidth / 2), shapeWidth / 2, 0, 2 * Math.PI);
+    context.moveTo(this.origin.x, this.origin.y);
+    context.arc(this.origin.x, this.origin.y, this.radius, this.startAngle, this.endAngle);
+    context.moveTo(this.origin.x, this.origin.y);
     context.fill();
   }
 }
 
-const width = height = 5;
-const windowSize = 800;
-const shapeWidth = windowSize / width;
-
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
-
-canvas.onclick = onCanvasClick;
-
-createBoard();
-draw(ctx);
-
-function createBoard() {
-  shapes = [...Array(width).keys()].map(x => Array(height));
-  for (let i = 0; i < width; i++) {
-    for (let j = 0; j < height; j++) {
-      shapes[i][j] = new Square(i, j, "#74e448", "#000000");
-    }
+class HalfCircle extends Circle {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+    this.origin = new Point(x * shapeWidth + (shapeWidth / 2), y * shapeWidth);
+    this.endAngle = Math.PI;
   }
 }
 
-function draw(context) {
+class QuarterCircle extends Circle {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+    this.origin = new Point(x * shapeWidth, y * shapeWidth);
+    this.endAngle = 0.5 * Math.PI;
+    this.radius = shapeWidth;
+  }
+}
+
+class Triangle extends Shape {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+    this.right = new Point(x * shapeWidth + shapeWidth, y * shapeWidth + (shapeWidth / 2));
+  }
+
+  draw(context) {
+    super.draw(context);
+
+    context.fillStyle = this.mainColor;
+    context.beginPath();
+    context.moveTo(this.origin.x, this.origin.y);
+    context.lineTo(this.right.x, this.right.y);
+    context.lineTo(this.bottom.x, this.bottom.y);
+    context.fill();
+  }
+}
+
+class RightTriangle extends Triangle {
+  constructor(x, y, mainColor, offColor) {
+    super(x, y, mainColor, offColor);
+    this.right = new Point(x * shapeWidth + shapeWidth, y * shapeWidth);
+  }
+
+  draw(context) {
+    super.draw(context);
+  }
+}
+
+function init() {  
+  canvas.onclick = onCanvasClick;
+  canvas.addEventListener('contextmenu', onCanvasClick);
+  
+  setupShapes();
+  createBoard();
+}
+
+function setupShapes() {
+  let shapes = document.getElementsByClassName("shape");
+  document.querySelectorAll('.shape').forEach(shape => shape.onclick = onShapeSelection);
+}
+
+function onShapeSelection(event) {
+  document.querySelectorAll('.shape').forEach(shape => shape.style.backgroundColor = neutralColor);
+  event.target.style.backgroundColor = document.getElementById("primary").style.backgroundColor;
+  selectedShape = event.target.id;
+}
+
+function createBoard() {
+  let primaryColor = document.getElementById("primary").style.backgroundColor;
+  let secondaryColor = document.getElementById("secondary").style.backgroundColor;
+
+  board = [...Array(width).keys()].map(x => Array(height));
   for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
-      shapes[i][j].draw(context);
+      board[i][j] = new Square(i, j, secondaryColor, primaryColor);
+      board[i][j].draw(ctx);
     }
   }
 }
@@ -77,13 +148,14 @@ function onCanvasClick(event) {
   let { x, y } = findClickedShapePosition(event.clientX, event.clientY);
 
   if (event.which === 3) {
-    //rotate
+    board[x][y].rotate();
   }
   else {
-    shapes[x][y] = new Circle(x, y, "#646768", "#74e448")
+    board[x][y] = createShape(x, y)
   }
 
-  shapes[x][y].draw(ctx)
+  board[x][y].draw(ctx)
+  event.preventDefault();
 }
 
 function findClickedShapePosition(mouseX, mouseY) {
@@ -92,3 +164,42 @@ function findClickedShapePosition(mouseX, mouseY) {
   let y = Math.floor((mouseY - rect.top) / shapeWidth);
   return { x, y }
 }
+
+function createShape(x, y) {
+  let primaryColor = document.getElementById("primary").style.backgroundColor;
+  let secondaryColor = document.getElementById("secondary").style.backgroundColor;
+
+  return new shapes[selectedShape](x, y, primaryColor, secondaryColor)
+}
+
+function rotateClockwise(origin, point) {
+  let deltaX = point.x - origin.x;
+  let deltaY = point.y - origin.y;
+
+  return {
+    x: 0 - deltaY + origin.x,
+    y: deltaX + origin.y
+  }
+}
+
+const width = height = 5;
+const windowSize = 800;
+const shapeWidth = windowSize / width;
+const neutralColor = "#38404e";
+let board;
+
+const shapes = {
+  Square: Square,
+  Triangle: Triangle,
+  RightTriangle: RightTriangle,
+  Circle: Circle,
+  HalfCircle: HalfCircle,
+  QuarterCircle: QuarterCircle
+}
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let selectedShape = "Square";
+
+document.addEventListener('DOMContentLoaded', init, false);
