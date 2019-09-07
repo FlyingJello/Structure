@@ -1,0 +1,34 @@
+body {
+  background: #272d37;
+}
+  
+#grid {
+  max-width: 800px;
+  width: 90%;
+  padding: 10px;
+  margin:0 auto;
+}
+
+#canvas {
+  width: 100%;
+  padding-bottom : 100%;
+}
+
+.colors {
+  max-width: 800px;
+  width: 90%;
+  padding: 10px;
+  margin:0 auto;
+}
+
+.color {
+  float:left;
+  position: relative;
+  width: 10%;
+  height: 14px;
+  background: #38404e;
+}
+
+.color:nth-of-type(odd) {
+  background-color: #ec4074;
+}
