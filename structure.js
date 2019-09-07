@@ -127,6 +127,7 @@ function swapColors() {
   let tmpColor = document.getElementById("primary").style.backgroundColor;
   document.getElementById("primary").style.backgroundColor = document.getElementById("secondary").style.backgroundColor;
   document.getElementById("secondary").style.backgroundColor = tmpColor;
+  setCurrentShapeColor(document.getElementById("primary").style.backgroundColor);
 }
 
 function setupShapes() {

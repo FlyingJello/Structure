@@ -50,9 +50,10 @@ body {
   margin-right: 6px;
   width: 0; 
   height: 0; 
+  border-right: 7px solid transparent;
   border-top: 7px solid #272d37;
-  border-left: 14px solid transparent;
-  border-bottom: 7px solid #272d37;
+  border-left: 7px solid #272d37;
+  border-bottom: 7px solid transparent;
   background-color: #38404e;
 }
 
