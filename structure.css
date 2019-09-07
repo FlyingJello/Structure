@@ -46,6 +46,16 @@ body {
   background-color: #38404e;
 }
 
+#swap{
+  margin-right: 6px;
+  width: 0; 
+  height: 0; 
+  border-top: 7px solid #272d37;
+  border-left: 14px solid transparent;
+  border-bottom: 7px solid #272d37;
+  background-color: #38404e;
+}
+
 #RightTriangle{
   width: 0; 
   height: 0; 

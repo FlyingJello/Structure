@@ -116,9 +116,17 @@ function init() {
   canvas.onclick = onCanvasClick;
   canvas.addEventListener('contextmenu', event => event.preventDefault());
   canvas.addEventListener('auxclick', onCanvasClick);
+
+  document.getElementById("swap").onclick = swapColors;
   
   setupShapes();
   createBoard();
+}
+
+function swapColors() {
+  let tmpColor = document.getElementById("primary").style.backgroundColor;
+  document.getElementById("primary").style.backgroundColor = document.getElementById("secondary").style.backgroundColor;
+  document.getElementById("secondary").style.backgroundColor = tmpColor;
 }
 
 function setupShapes() {
@@ -128,8 +136,14 @@ function setupShapes() {
 
 function onShapeSelection(event) {
   document.querySelectorAll('.shape').forEach(shape => shape.style.backgroundColor = neutralColor);
-  event.target.style.backgroundColor = document.getElementById("primary").style.backgroundColor;
   selectedShape = event.target.id;
+
+  let color = document.getElementById("primary").style.backgroundColor;
+  setCurrentShapeColor(color)
+}
+
+function setCurrentShapeColor(color) {
+  document.getElementById(selectedShape).style.backgroundColor = color;
 }
 
 function createBoard() {
@@ -156,15 +170,10 @@ function onCanvasClick(event) {
   else if (event.which === 2) {
     let color = getMouseColor(event.clientX, event.clientY);
     document.getElementById("primary").style.backgroundColor = color;
+    setCurrentShapeColor(color);
   }
   else {
-    if (board[x][y] instanceof shapes[selectedShape]) {
-      board[x][y].mainColor = primaryColor;
-      board[x][y].offColor = secondaryColor;
-    }
-    else {
-      board[x][y] = new shapes[selectedShape](x, y, primaryColor, secondaryColor)
-    }
+    board[x][y] = new shapes[selectedShape](x, y, primaryColor, secondaryColor);
   }
 
   board[x][y].draw(ctx)
