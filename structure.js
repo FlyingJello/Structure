@@ -120,6 +120,7 @@ function init() {
   
   setupShapes();
   createBoard();
+  createRandomShapes();
 }
 
 function updateMainColor(jscolor) {
@@ -159,6 +160,25 @@ function createBoard() {
     for (let j = 0; j < height; j++) {
       board[i][j] = new Square(i, j, secondaryColor, primaryColor);
       board[i][j].draw(ctx);
+    }
+  }
+}
+
+function createRandomShapes() {
+  let primaryColor = document.getElementById("primary").style.backgroundColor;
+  let secondaryColor = document.getElementById("secondary").style.backgroundColor;
+  let randomShape = Object.keys(shapes)[Math.floor(Math.random() * 5 + 1)];
+
+  for (let i = 0; i < width; i++) {
+    for (let j = 0; j < height; j++) {
+      if (Math.floor(Math.random() * 2)) {
+        board[i][j] = new shapes[randomShape](i, j, primaryColor, secondaryColor);
+        let rotation = Math.floor(Math.random() * 4);
+        for (let k = 0; k < rotation; k++) {
+          board[i][j].rotate();
+        }
+        board[i][j].draw(ctx);
+      }
     }
   }
 }
