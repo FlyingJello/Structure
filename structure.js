@@ -116,11 +116,14 @@ function init() {
   canvas.onclick = onCanvasClick;
   canvas.addEventListener('contextmenu', event => event.preventDefault());
   canvas.addEventListener('auxclick', onCanvasClick);
-
   document.getElementById("swap").onclick = swapColors;
   
   setupShapes();
   createBoard();
+}
+
+function updateMainColor(jscolor) {
+  setCurrentShapeColor(`#${jscolor}`);
 }
 
 function swapColors() {
