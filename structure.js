@@ -146,12 +146,20 @@ function createBoard() {
 
 function onCanvasClick(event) {
   let { x, y } = findClickedShapePosition(event.clientX, event.clientY);
+  let primaryColor = document.getElementById("primary").style.backgroundColor;
+  let secondaryColor = document.getElementById("secondary").style.backgroundColor;
 
   if (event.which === 3) {
     board[x][y].rotate();
   }
   else {
-    board[x][y] = createShape(x, y)
+    if (board[x][y] instanceof shapes[selectedShape]) {
+      board[x][y].mainColor = primaryColor;
+      board[x][y].offColor = secondaryColor;
+    }
+    else {
+      board[x][y] = new shapes[selectedShape](x, y, primaryColor, secondaryColor)
+    }
   }
 
   board[x][y].draw(ctx)
@@ -163,13 +171,6 @@ function findClickedShapePosition(mouseX, mouseY) {
   let x = Math.floor((mouseX - rect.left) / shapeWidth);
   let y = Math.floor((mouseY - rect.top) / shapeWidth);
   return { x, y }
-}
-
-function createShape(x, y) {
-  let primaryColor = document.getElementById("primary").style.backgroundColor;
-  let secondaryColor = document.getElementById("secondary").style.backgroundColor;
-
-  return new shapes[selectedShape](x, y, primaryColor, secondaryColor)
 }
 
 function rotateClockwise(origin, point) {
