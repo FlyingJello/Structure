@@ -115,6 +115,7 @@ class RightTriangle extends Triangle {
 function init() {  
   canvas.onclick = onCanvasClick;
   canvas.addEventListener('contextmenu', onCanvasClick);
+  canvas.addEventListener('auxclick', onCanvasClick);
   
   setupShapes();
   createBoard();
@@ -152,6 +153,10 @@ function onCanvasClick(event) {
   if (event.which === 3) {
     board[x][y].rotate();
   }
+  else if (event.which === 2) {
+    let color = getMouseColor(event.clientX, event.clientY);
+    document.getElementById("primary").style.backgroundColor = color;
+  }
   else {
     if (board[x][y] instanceof shapes[selectedShape]) {
       board[x][y].mainColor = primaryColor;
@@ -172,6 +177,20 @@ function findClickedShapePosition(mouseX, mouseY) {
   let y = Math.floor((mouseY - rect.top) / shapeWidth);
   return { x, y }
 }
+
+function getMouseColor(mouseX, mouseY) {
+  let rect = canvas.getBoundingClientRect();
+  let pixel = ctx.getImageData(mouseX - rect.left, mouseY - rect.top, 1, 1).data; 
+  return `#${rgbToHex(pixel[0])}${rgbToHex(pixel[1])}${rgbToHex(pixel[2])}`;
+}
+
+function rgbToHex(rgb) { 
+  let hex = Number(rgb).toString(16);
+  if (hex.length < 2) {
+    hex = "0" + hex;
+  }
+  return hex;
+};
 
 function rotateClockwise(origin, point) {
   let deltaX = point.x - origin.x;
