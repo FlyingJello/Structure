@@ -114,7 +114,7 @@ class RightTriangle extends Triangle {
 
 function init() {  
   canvas.onclick = onCanvasClick;
-  canvas.addEventListener('contextmenu', onCanvasClick);
+  canvas.addEventListener('contextmenu', event => event.preventDefault());
   canvas.addEventListener('auxclick', onCanvasClick);
   
   setupShapes();
@@ -122,8 +122,8 @@ function init() {
 }
 
 function setupShapes() {
-  let shapes = document.getElementsByClassName("shape");
   document.querySelectorAll('.shape').forEach(shape => shape.onclick = onShapeSelection);
+  document.getElementById("Square").style.backgroundColor = document.getElementById("primary").style.backgroundColor;
 }
 
 function onShapeSelection(event) {
